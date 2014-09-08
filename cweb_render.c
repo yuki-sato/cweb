@@ -35,8 +35,8 @@ char * CWebRenderHTML(char * filename, CWebObject *params)
 	if ((fp = fopen(filename, "r")) == NULL) {
 		return NULL;
 	}
-    unsigned long memorysize = filesize;
-    char * text = malloc(sizeof(char) * memorysize);
+    unsigned long bufferSize = filesize + 1;
+    char * text = malloc(sizeof(char) * bufferSize);
     unsigned long readedsize = fread (text, sizeof (char), filesize, fp);
     if(filesize != readedsize){
         free(text);
@@ -45,6 +45,9 @@ char * CWebRenderHTML(char * filename, CWebObject *params)
     
     // rendering (replacement method)
     CWebRenderOverwriteRendering(text, filesize, params);
+    
+    // null terminate
+    text[bufferSize-1] = '\0';
     
     // closing
 	int ret = fclose(fp);

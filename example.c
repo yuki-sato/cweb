@@ -26,6 +26,13 @@ void didReceiveCWebRequest(CWebTCPConnection *connection, CWebHTTPRequest *reque
         CWebObjectFree(obj);
         response = CWebResponseCreateWithHTMLBODY(&html);
         
+        CWebObject *header = CWebObjectCreateDictionaryStringValueWithCopy("Host", "yuki-sato.com");
+        CWebHTTPRequest *req = CWebCreateRequestWith("219.94.243.70", "GET", 80, NULL);
+        req->headers = header;
+        CWebHTTPResponse *res = CWebRequest(req);
+        CWebRequestFree(req);
+        CWebResponseFree(res);
+        
     }else{
         CWebObject *obj = CWebObjectCreateDictionaryStringValueWithCopy("title", "404 Notfound");
         html = CWebRenderHTML("./index.html", obj);

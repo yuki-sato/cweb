@@ -18,7 +18,7 @@ typedef struct _CWebTCPConnection {
 
 int CWebListen(int port);
 void CWebResponse(CWebTCPConnection *connection, CWebHTTPResponse *response);
-
+CWebHTTPResponse * CWebRequest(CWebHTTPRequest *request);
 // delegates
 void didReceiveCWebRequest(CWebTCPConnection *connection, CWebHTTPRequest *request);
 

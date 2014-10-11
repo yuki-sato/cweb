@@ -43,9 +43,7 @@ void SiPipeHandler(int signalType) {
     printf("lost connection");
 }
 
-int CWebListen(int port) {
-    _socket = -1;
-    
+int CWebAddSignalObservation(void) {
     // Receiving Cntrl + C
     struct sigaction action;
     action.sa_handler = SignalHandler;
@@ -66,12 +64,21 @@ int CWebListen(int port) {
     if(sigaction(SIGPIPE, &sigpipeAction, 0) < 0){
         return 0;
     }
+    return 1;
+}
+
+int CWebListen(int port) {
+    _socket = -1;
+    
+    int ret = CWebAddSignalObservation();
+    if(ret < 1)
+        return 0;
 
     // open socket
     int sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if(sock < 0){
+    if(sock < 0)
         return 0;
-    }
+    
     _socket = sock;
     
     // bind to port
@@ -167,4 +174,64 @@ void CWebResponse(CWebTCPConnection *connection, CWebHTTPResponse *response) {
         printf("CWeb response body error");
     }
 }
+
+CWebHTTPResponse * CWebRequest(CWebHTTPRequest *request) {
+    
+    if(request==NULL || request->ip == NULL)
+        return NULL;
+    
+    // Ctrl+C and SIGPIPE handling
+    int ret = CWebAddSignalObservation();
+    if(ret < 1)
+        return NULL;
+    
+    // open socket
+    int sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if(sock < 0)
+        return NULL;
+    
+    // destionation
+    struct sockaddr_in targetAddr;
+    memset(&targetAddr, 0, sizeof(targetAddr));
+    targetAddr.sin_family = AF_INET;
+    targetAddr.sin_addr.s_addr = inet_addr(request->ip);
+    targetAddr.sin_port = htons(request->port);
+    
+    // connect
+    if(connect(sock, (struct sockaddr *) &targetAddr, sizeof(targetAddr)) < 0)
+        return NULL;
+    
+    // send a request
+    char *requestString = CWebHTTP_CreateRequestStringFrom(request);
+    if(!requestString)
+        return NULL;
+    unsigned long length = strlen(requestString);
+    printf("\nrequest %lu[\n%s\n]", length, requestString);
+    if(send(sock, requestString, length, 0) != length){
+        printf("CWeb HTTP request error");
+    }
+    free(requestString);
+    
+    // receive a response
+    char data[0xFFFF];
+    ssize_t dataLength;
+    dataLength = recv(sock, data, 0xFFFF - 1, 0);
+    if(dataLength < 0){
+        return NULL;
+    }
+    data[dataLength] = '\0';
+    printf("\nresponse[\n%s\n]", data);
+    // parse
+    CWebHTTPResponse *response = CwebResponseFromResponseString(data, dataLength);
+    
+    // cut tcp connection
+    if(close(sock) < 0) {
+        return NULL;
+    }
+    
+    return response;
+}
+
+
+
 

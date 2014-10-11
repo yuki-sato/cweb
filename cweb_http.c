@@ -16,12 +16,28 @@ void CWebRequestFillPathQuery(CWebHTTPRequest *request, char *uri, unsigned long
 unsigned long CWebRequestFillHeaders(CWebHTTPRequest *request, char *requestString, unsigned long head, unsigned long textLength);
 
 //===============================================
+#pragma mark - Instant Methods -
+//===============================================
+CWebHTTPRequest *CWebCreateRequestWith(char *ip, char *method, int port, CWebObject *path) {
+    CWebHTTPRequest *request = malloc(sizeof(CWebHTTPRequest));
+    request->ip = ip;
+    request->port = port;
+    request->method = method;
+    request->path = path;
+    request->headers = NULL;
+    request->params = NULL;
+    request->queries = NULL;
+    return request;
+}
+
+//===============================================
 #pragma mark - Request -
 //===============================================
 CWebHTTPRequest *CWebRequestFromRequestString(char *requestString) {
     if(requestString == NULL)return NULL;
     
     CWebHTTPRequest *request = malloc(sizeof(CWebHTTPRequest));
+    request->ip = NULL;
     request->method = NULL;
     request->path = NULL;
     request->queries = NULL;
@@ -70,6 +86,41 @@ CWebHTTPRequest *CWebRequestFromRequestString(char *requestString) {
 #warning TODO
     
     return request;
+}
+
+CWebHTTPResponse *CwebResponseFromResponseString(char *responseString, unsigned long length) {
+    unsigned long index = 0;
+    unsigned long i = 0;
+    char statusCode[4];
+    
+    if(!responseString || length == 0)
+        return NULL;
+    
+    CWebHTTPResponse *response = (CWebHTTPResponse *)malloc(sizeof(CWebHTTPResponse));
+    
+    // skip to status
+    while(1) {
+        if(responseString[index++] == ' ')break;
+        if(index == length)return NULL;     // nostatus code
+    }
+    i=0;
+    while(1) {
+        statusCode[i++] = responseString[index++];
+        if(responseString[index] == ' ')break;
+        if(index == length)return NULL;
+    }
+    statusCode[3] = '\0';
+    response->statusCode = atoi(statusCode);
+    // skip to headerField
+    while(1) {
+        if(responseString[index++] == '\n')break;
+        if(index == length)return NULL;
+    }
+    
+    // headerField
+    // TODO
+    
+    return response;
 }
 
 void CWebRequestFillPathQuery(CWebHTTPRequest *request, char *uri, unsigned long uriLength) {
@@ -291,15 +342,111 @@ CWebHTTPResponse *CWebResponseCreateWithHTMLBODY(char **html) {
 }
 
 //===============================================
+#pragma mark - Request -
+//===============================================
+// memory over lap is possible.
+char * CWebHTTP_CreateRequestStringFrom(CWebHTTPRequest *request) {
+    if(request==NULL)
+        return NULL;
+    unsigned long index = 0;
+    unsigned long i = 0;
+    char *buffer = malloc(sizeof(char) * 0xFFFF);
+    
+    // example.) "GET / HTTP/1.1\nHost: yuki-sato.com\n\n";
+    
+    // method
+    while (1) {
+        if(request->method[index] == '\0')break;
+        buffer[index] = request->method[index];
+        index++;
+    }
+    buffer[index++] = ' ';
+    
+    CWebObject *obj;
+    
+    // build path field
+    obj = request->path;
+    if(!obj){
+        buffer[index++] = '/';
+    }else{
+        while (1) {
+            i=0;
+            while (1) {
+                if(((char *)obj->value)[i] == '\0') break;
+                buffer[index++] = ((char *)obj->value)[i++];
+            }
+            obj = obj->_next;
+            if(!obj)break;
+            buffer[index++] = '/';
+        }
+    }
+    
+    // build query field
+    obj = request->queries;
+    if(obj){
+        buffer[index++] = '?';
+        while (1) {
+            // "key: value\n"
+            i=0;
+            while (1) {
+                if(((char *)obj->key)[i] == '\0') break;
+                buffer[index++] = ((char *)obj->key)[i++];
+            }
+            buffer[index++] = '=';
+            i=0;
+            while (1) {
+                if(((char *)obj->value)[i] == '\0') break;
+                buffer[index++] = ((char *)obj->value)[i++];
+            }
+            obj = obj->_next;
+            if(!obj)break;
+            buffer[index++] = '&';
+        }
+    }
+    
+    // reserved text
+    strcpy(&buffer[index], " HTTP/1.1\n");
+    index += 10;
+    
+    // header field
+    obj = request->headers;
+    
+    while (obj) {
+        // "key: value\n"
+        i=0;
+        while (1) {
+            if(((char *)obj->key)[i] == '\0') break;
+            buffer[index++] = ((char *)obj->key)[i++];
+        }
+        buffer[index++] = ':';
+        buffer[index++] = ' ';
+        i=0;
+        while (1) {
+            if(((char *)obj->value)[i] == '\0') break;
+            buffer[index++] = ((char *)obj->value)[i++];
+        }
+        obj = obj->_next;
+        buffer[index++] = '\n';
+    }
+
+    buffer[index++] = '\n';
+    buffer[index++] = '\0';
+    
+    return buffer;
+}
+
+//===============================================
 #pragma mark - Free -
 //===============================================
 void CWebRequestFree(CWebHTTPRequest *request) {
+    int ref;
     if(request==NULL)return;
-    if(request->method != NULL) free(request->method);
-    if(request->path != NULL)   CWebObjectFree(request->path);
-    if(request->queries != NULL)CWebObjectFree(request->queries);
-    if(request->headers != NULL)CWebObjectFree(request->headers);
-    if(request->params != NULL) CWebObjectFree(request->params);
+    if(request->ip != NULL && ((int *)request->ip > &ref)) free(request->ip);
+    if(request->method != NULL && ((int *)request->method > &ref)) free(request->method);
+    if(request->path != NULL && ((int *)request->path > &ref))   CWebObjectFree(request->path);
+    if(request->queries != NULL && ((int *)request->queries > &ref))CWebObjectFree(request->queries);
+    if(request->headers != NULL && ((int *)request->headers > &ref))CWebObjectFree(request->headers);
+    if(request->params != NULL && ((int *)request->params > &ref)) CWebObjectFree(request->params);
     free(request);
 }
 

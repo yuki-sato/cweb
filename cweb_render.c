@@ -77,7 +77,7 @@ void CWebRenderOverwriteRendering(char *text, unsigned long textLength, CWebObje
                 memcpy(key, &text[commandHead + 3], (commandTail - commandHead - 4));
                 key[commandTail - commandHead - 4] = '\0';
                 
-#warning TODO not only strings
+//#warning TODO not only strings
                 char *value = (char *)CWebObjectValueWithKey(params, key);
                 memset(&text[commandHead], ' ', commandTail - commandHead + 1);
                 memcpy(&text[commandHead], value, strlen(value));

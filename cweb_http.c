@@ -83,7 +83,7 @@ CWebHTTPRequest *CWebRequestFromRequestString(char *requestString) {
     head = CWebRequestFillHeaders(request, requestString, head, textLength);
     
     // params
-#warning TODO
+//#warning TODO
     
     return request;
 }

@@ -106,7 +106,7 @@ int CWebListen(int port) {
 //        printf("connection from %s\n", inet_ntoa(clientAddr.sin_addr));
         
         // receve data
-#warning TODO separated data
+//#warning TODO separated data
         char data[0xFFF]; // about 4kb
         ssize_t dataLength;
         dataLength = recv(connectedSock, data, 0xFFF - 1, 0);

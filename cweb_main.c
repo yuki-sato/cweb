@@ -12,7 +12,7 @@
 #ifdef _WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#elif
+#else
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netdb.h>
@@ -124,7 +124,7 @@ int CWebListen(int port) {
 		char data[0xFFF]; // about 4kb
 #ifdef _WIN32
 		int dataLength;
-#elif
+#else
 		ssize_t dataLength;
 #endif
 		
@@ -152,7 +152,7 @@ int CWebListen(int port) {
 #ifdef _WIN32
 		closesocket(sock);
 		WSACleanup();
-#elif
+#else
 		int ret = close(connectedSock);
 		if (ret < 0){
 			printf("CWeb socket closing error\n");
@@ -245,7 +245,7 @@ CWebHTTPResponse * CWebRequest(CWebHTTPRequest *request) {
     char data[0xFFFF];
 #ifdef _WIN32
 	int dataLength;
-#elif
+#else
     ssize_t dataLength;
 #endif
 	dataLength = recv(sock, data, 0xFFFF - 1, 0);
@@ -260,7 +260,7 @@ CWebHTTPResponse * CWebRequest(CWebHTTPRequest *request) {
 #ifdef _WIN32
 	closesocket(sock);
 	WSACleanup();
-#elif
+#else
 	// cut tcp connection
 	if (close(sock) < 0) {
 		return NULL;

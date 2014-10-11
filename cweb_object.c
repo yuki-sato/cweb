@@ -14,8 +14,7 @@
 //===============================================
 #pragma mark --- MemoryRelateds
 //===============================================
-CWebObject * CWebObjectCreate(void)
-{
+CWebObject * CWebObjectCreate(void) {
     CWebObject *object = (CWebObject *)malloc(sizeof(CWebObject));
     if(object == NULL){
         // memory error
@@ -27,8 +26,7 @@ CWebObject * CWebObjectCreate(void)
     return object;
 }
 
-CWebObject * CWebObjectCreateDictionary(char *key, void *value, CWebObjectType valueType)
-{
+CWebObject * CWebObjectCreateDictionary(char *key, void *value, CWebObjectType valueType) {
     if(key == NULL)return NULL;
     CWebObject * object = (CWebObject *)malloc(sizeof(CWebObject));
     if(object == NULL){
@@ -42,8 +40,7 @@ CWebObject * CWebObjectCreateDictionary(char *key, void *value, CWebObjectType v
     return object;
 }
 
-CWebObject * CWebObjectCreateArray(void *value, CWebObjectType valueType)
-{
+CWebObject * CWebObjectCreateArray(void *value, CWebObjectType valueType) {
     CWebObject * object = (CWebObject *)malloc(sizeof(CWebObject));
     if(object == NULL){
         // memory error
@@ -56,8 +53,7 @@ CWebObject * CWebObjectCreateArray(void *value, CWebObjectType valueType)
     return object;
 }
 
-void CWebObjectFree(CWebObject *object)
-{
+void CWebObjectFree(CWebObject *object) {
     if(object->key != NULL)free(object->key);
     if(object->value != NULL)free(object->value);
     if(object->_next != NULL)CWebObjectFree(object->_next);
@@ -67,8 +63,7 @@ void CWebObjectFree(CWebObject *object)
 //===============================================
 #pragma mark --- Add
 //===============================================
-int CWebObjectAddObjectToDictionary(CWebObject *object, char *key, void *value, CWebObjectType valueType)
-{
+int CWebObjectAddObjectToDictionary(CWebObject *object, char *key, void *value, CWebObjectType valueType) {
     if(object==NULL || key==NULL)return 0;
     CWebObject * newobject = (CWebObject *)malloc(sizeof(CWebObject));
     if(newobject == NULL){
@@ -93,8 +88,7 @@ int CWebObjectAddObjectToDictionary(CWebObject *object, char *key, void *value, 
     return 0;
 }
 
-int CWebObjectAddObjectToArray(CWebObject *object, void *value, CWebObjectType valueType)
-{
+int CWebObjectAddObjectToArray(CWebObject *object, void *value, CWebObjectType valueType) {
     if(object==NULL)return 0;
     CWebObject * newobject = (CWebObject *)malloc(sizeof(CWebObject));
     if(newobject == NULL){
@@ -121,8 +115,7 @@ int CWebObjectAddObjectToArray(CWebObject *object, void *value, CWebObjectType v
 //===============================================
 #pragma mark --- Remove
 //===============================================
-int CWebObjectRemoveObject(CWebObject **object, CWebObject *targetObject)
-{
+int CWebObjectRemoveObject(CWebObject **object, CWebObject *targetObject) {
     if(*object == NULL)return 0;
     
     CWebObject *lastObject = NULL;
@@ -147,8 +140,7 @@ int CWebObjectRemoveObject(CWebObject **object, CWebObject *targetObject)
     return 0;
 }
 
-int CWebObjectRemoveObjectAtIndex(CWebObject **object, int index)
-{
+int CWebObjectRemoveObjectAtIndex(CWebObject **object, int index) {
     if(*object == NULL)return 0;
     
     CWebObject *lastObject = NULL;
@@ -173,8 +165,7 @@ int CWebObjectRemoveObjectAtIndex(CWebObject **object, int index)
     return 0;
 }
 
-int CWebObjectRemoveObjectWithKey(CWebObject **object, char *key)
-{
+int CWebObjectRemoveObjectWithKey(CWebObject **object, char *key) {
     if(*object == NULL)return 0;
     if((*object)->key == NULL)return 0;
     
@@ -203,8 +194,7 @@ int CWebObjectRemoveObjectWithKey(CWebObject **object, char *key)
 //===============================================
 #pragma mark - DicArray -
 //===============================================
-void * CWebObjectValueWithKey(CWebObject *object, char *key)
-{
+void * CWebObjectValueWithKey(CWebObject *object, char *key) {
     if(object == NULL)return NULL;
     
     CWebObject *obj = object;
@@ -221,8 +211,7 @@ void * CWebObjectValueWithKey(CWebObject *object, char *key)
 
 }
 
-void * CWebObjectValueAtIndex(CWebObject *object, int index)
-{
+void * CWebObjectValueAtIndex(CWebObject *object, int index) {
     if(object == NULL)return NULL;
     
     CWebObject *obj = object;
@@ -241,8 +230,7 @@ void * CWebObjectValueAtIndex(CWebObject *object, int index)
 //===============================================
 #pragma mark - Utils -
 //===============================================
-CWebObject * CWebObjectCreateDictionaryStringValueWithCopy(char *key, char *value)
-{
+CWebObject * CWebObjectCreateDictionaryStringValueWithCopy(char *key, char *value) {
     if(key==NULL || value==NULL)return 0;
     
     char *_key = malloc(sizeof(char) * (strlen(key) + 1));
@@ -258,8 +246,7 @@ CWebObject * CWebObjectCreateDictionaryStringValueWithCopy(char *key, char *valu
     return object;
 }
 
-int CWebObjectAddStringObjectWithCopyToDictionary(CWebObject *object, char *key, char *value)
-{
+int CWebObjectAddStringObjectWithCopyToDictionary(CWebObject *object, char *key, char *value) {
     if(object==NULL || key==NULL || value==NULL)return 0;
     
     char *_key = malloc(sizeof(char) * (strlen(key) + 1));
@@ -270,8 +257,7 @@ int CWebObjectAddStringObjectWithCopyToDictionary(CWebObject *object, char *key,
     return CWebObjectAddObjectToDictionary(object, _key, _value, CWebObjectTypeString);
 }
 
-void CWebObjectPrint(CWebObject *object)
-{
+void CWebObjectPrint(CWebObject *object) {
     CWebObject *target = object;
     while (target!=NULL) {
         printf("%s:%s\n",target->key,target->value);

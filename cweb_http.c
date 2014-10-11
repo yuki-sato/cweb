@@ -18,8 +18,7 @@ unsigned long CWebRequestFillHeaders(CWebHTTPRequest *request, char *requestStri
 //===============================================
 #pragma mark - Request -
 //===============================================
-CWebHTTPRequest *CWebRequestFromRequestString(char *requestString)
-{
+CWebHTTPRequest *CWebRequestFromRequestString(char *requestString) {
     if(requestString == NULL)return NULL;
     
     CWebHTTPRequest *request = malloc(sizeof(CWebHTTPRequest));
@@ -73,8 +72,7 @@ CWebHTTPRequest *CWebRequestFromRequestString(char *requestString)
     return request;
 }
 
-void CWebRequestFillPathQuery(CWebHTTPRequest *request, char *uri, unsigned long uriLength)
-{
+void CWebRequestFillPathQuery(CWebHTTPRequest *request, char *uri, unsigned long uriLength) {
     int hasQuery = 0;
     int isLastCharactor = 0;
     
@@ -150,8 +148,7 @@ void CWebRequestFillPathQuery(CWebHTTPRequest *request, char *uri, unsigned long
     }
 }
 
-unsigned long CWebRequestFillHeaders(CWebHTTPRequest *request, char *requestString, unsigned long head, unsigned long textLength)
-{
+unsigned long CWebRequestFillHeaders(CWebHTTPRequest *request, char *requestString, unsigned long head, unsigned long textLength) {
     int isLastCharactor = 0;
     
     unsigned long length = 0;
@@ -203,8 +200,7 @@ unsigned long CWebRequestFillHeaders(CWebHTTPRequest *request, char *requestStri
 
 // /stores/:id
 // /stores/*
-int CWebRequestMatch(CWebHTTPRequest *request, char *method, char *path)
-{
+int CWebRequestMatch(CWebHTTPRequest *request, char *method, char *path) {
     // path may NULL(= any match)
     if(path==NULL || path[0] == '\0')return 1;
     if(request->method==NULL)return 0;  // can't process
@@ -270,8 +266,7 @@ int CWebRequestMatch(CWebHTTPRequest *request, char *method, char *path)
 //===============================================
 #pragma mark - Response -
 //===============================================
-CWebHTTPResponse *CWebResponseCreateWithHTMLBODY(char **html)
-{
+CWebHTTPResponse *CWebResponseCreateWithHTMLBODY(char **html) {
     if(html==NULL){
         printf("CWeb Error No html body. maybe your rendering html is not exist\n");
         return NULL;
@@ -298,8 +293,7 @@ CWebHTTPResponse *CWebResponseCreateWithHTMLBODY(char **html)
 //===============================================
 #pragma mark - Free -
 //===============================================
-void CWebRequestFree(CWebHTTPRequest *request)
-{
+void CWebRequestFree(CWebHTTPRequest *request) {
     if(request==NULL)return;
     if(request->method != NULL) free(request->method);
     if(request->path != NULL)   CWebObjectFree(request->path);
@@ -309,8 +303,7 @@ void CWebRequestFree(CWebHTTPRequest *request)
     free(request);
 }
 
-void CWebResponseFree(CWebHTTPResponse *response)
-{
+void CWebResponseFree(CWebHTTPResponse *response) {
     if(response==NULL)return;
     if(response->headers!=NULL) CWebObjectFree(response->headers);
     if(response->body) free(response->body);

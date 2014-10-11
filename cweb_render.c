@@ -19,8 +19,7 @@ void CWebRenderOverwriteRendering(char *text, unsigned long textLength, CWebObje
  simple replacement
  <%=name%>  => <>
 */
-char * CWebRenderHTML(char * filename, CWebObject *params)
-{
+char * CWebRenderHTML(char * filename, CWebObject *params) {
     if(filename==NULL) return NULL;
     
     // file reading
@@ -58,8 +57,7 @@ char * CWebRenderHTML(char * filename, CWebObject *params)
     return text;
 }
 
-void CWebRenderOverwriteRendering(char *text, unsigned long textLength, CWebObject *params)
-{
+void CWebRenderOverwriteRendering(char *text, unsigned long textLength, CWebObject *params) {
     if(params == NULL)return;
     unsigned long commandHead = textLength;
     unsigned long commandTail = textLength;

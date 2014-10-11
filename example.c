@@ -12,14 +12,12 @@
 #include <string.h>
 #include <stdio.h>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     CWebListen(8080);
     return 1;
 }
 
-void didReceiveCWebRequest(CWebTCPConnection *connection, CWebHTTPRequest *request)
-{
+void didReceiveCWebRequest(CWebTCPConnection *connection, CWebHTTPRequest *request) {
     CWebHTTPResponse *response=NULL;
     char *html = NULL;
     if(CWebRequestMatch(request, "GET", "/")){

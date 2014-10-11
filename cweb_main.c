@@ -21,8 +21,7 @@
 
 int _socket;
 
-int _cweb_main_error_withsocket(int socket, char *error)
-{
+int _cweb_main_error_withsocket(int socket, char *error) {
     printf("%s\n", error);
     if(socket>=0){
         int ret = close(socket);
@@ -34,20 +33,17 @@ int _cweb_main_error_withsocket(int socket, char *error)
     return 1;
 }
 
-void SignalHandler(int signalType)
-{
+void SignalHandler(int signalType) {
     printf("\nBye.\n");
     _cweb_main_error_withsocket(_socket, "");
     exit(1);
 }
 
-void SiPipeHandler(int signalType)
-{
+void SiPipeHandler(int signalType) {
     printf("lost connection");
 }
 
-int CWebListen(int port)
-{
+int CWebListen(int port) {
     _socket = -1;
     
     // Receiving Cntrl + C
@@ -138,8 +134,7 @@ int CWebListen(int port)
     return 1;
 }
 
-void CWebResponse(CWebTCPConnection *connection, CWebHTTPResponse *response)
-{
+void CWebResponse(CWebTCPConnection *connection, CWebHTTPResponse *response) {
     // invalid response
     if(response==NULL)return;
     // header

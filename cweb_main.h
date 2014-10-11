@@ -9,7 +9,11 @@
 #ifndef cweb_cweb_main_h
 #define cweb_cweb_main_h
 
+#ifdef _WIN32
+#include <winsock2.h>
+#elif
 #include <netinet/in.h>
+#endif
 
 typedef struct _CWebTCPConnection {
     int socket;

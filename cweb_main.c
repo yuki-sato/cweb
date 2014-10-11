@@ -8,14 +8,21 @@
 
 #include "cweb.h"
 
+
+#ifdef _WIN32
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#elif
 #include <sys/socket.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <signal.h>
 
 
@@ -44,6 +51,7 @@ void SiPipeHandler(int signalType) {
 }
 
 int CWebAddSignalObservation(void) {
+#ifndef _WIN32
     // Receiving Cntrl + C
     struct sigaction action;
     action.sa_handler = SignalHandler;
@@ -64,7 +72,8 @@ int CWebAddSignalObservation(void) {
     if(sigaction(SIGPIPE, &sigpipeAction, 0) < 0){
         return 0;
     }
-    return 1;
+#endif
+	return 1;
 }
 
 int CWebListen(int port) {
@@ -73,6 +82,11 @@ int CWebListen(int port) {
     int ret = CWebAddSignalObservation();
     if(ret < 1)
         return 0;
+
+#ifdef _WIN32
+	WSADATA wsaData;
+	WSAStartup(MAKEWORD(2, 0), &wsaData);
+#endif
 
     // open socket
     int sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -107,8 +121,13 @@ int CWebListen(int port) {
         
         // receve data
 //#warning TODO separated data
-        char data[0xFFF]; // about 4kb
-        ssize_t dataLength;
+		char data[0xFFF]; // about 4kb
+#ifdef _WIN32
+		int dataLength;
+#elif
+		ssize_t dataLength;
+#endif
+		
         dataLength = recv(connectedSock, data, 0xFFF - 1, 0);
         if(dataLength < 0){
             return _cweb_main_error_withsocket(sock, "CWeb receiving data error");
@@ -130,10 +149,15 @@ int CWebListen(int port) {
         }
         CWebRequestFree(request);
         
-        int ret = close(connectedSock);
-        if(ret < 0){
-            printf("CWeb socket closing error\n");
-        }
+#ifdef _WIN32
+		closesocket(sock);
+		WSACleanup();
+#elif
+		int ret = close(connectedSock);
+		if (ret < 0){
+			printf("CWeb socket closing error\n");
+		}
+#endif
     }
     
     // never reach here
@@ -184,9 +208,14 @@ CWebHTTPResponse * CWebRequest(CWebHTTPRequest *request) {
     int ret = CWebAddSignalObservation();
     if(ret < 1)
         return NULL;
+
+#ifdef _WIN32
+	WSADATA wsaData;
+	WSAStartup(MAKEWORD(2, 0), &wsaData);
+#endif
     
     // open socket
-    int sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+    int sock = socket(PF_INET, SOCK_STREAM, 0);
     if(sock < 0)
         return NULL;
     
@@ -214,8 +243,12 @@ CWebHTTPResponse * CWebRequest(CWebHTTPRequest *request) {
     
     // receive a response
     char data[0xFFFF];
+#ifdef _WIN32
+	int dataLength;
+#elif
     ssize_t dataLength;
-    dataLength = recv(sock, data, 0xFFFF - 1, 0);
+#endif
+	dataLength = recv(sock, data, 0xFFFF - 1, 0);
     if(dataLength < 0){
         return NULL;
     }
@@ -223,11 +256,16 @@ CWebHTTPResponse * CWebRequest(CWebHTTPRequest *request) {
     printf("\nresponse[\n%s\n]", data);
     // parse
     CWebHTTPResponse *response = CwebResponseFromResponseString(data, dataLength);
-    
-    // cut tcp connection
-    if(close(sock) < 0) {
-        return NULL;
-    }
+
+#ifdef _WIN32
+	closesocket(sock);
+	WSACleanup();
+#elif
+	// cut tcp connection
+	if (close(sock) < 0) {
+		return NULL;
+	}
+#endif
     
     return response;
 }

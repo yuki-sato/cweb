@@ -97,6 +97,8 @@ CWebHTTPResponse *CwebResponseFromResponseString(char *responseString, unsigned 
         return NULL;
     
     CWebHTTPResponse *response = (CWebHTTPResponse *)malloc(sizeof(CWebHTTPResponse));
+    response->headers = NULL;
+    response->body = NULL;
     
     // skip to status
     while(1) {

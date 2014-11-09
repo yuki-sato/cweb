@@ -30,7 +30,7 @@ typedef struct _CWebHTTPResponse {
 }CWebHTTPResponse;
 
 // instance method
-CWebHTTPRequest *CWebCreateRequestWith(char *ip, char *method, int port, CWebObject *path);
+CWebHTTPRequest *CWebRequestCreateWith(char *ip, char *method, int port, CWebObject *path);
 
 // for listening
 CWebHTTPRequest *CWebRequestFromRequestString(char *requestString);

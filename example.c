@@ -27,7 +27,7 @@ void didReceiveCWebRequest(CWebTCPConnection *connection, CWebHTTPRequest *reque
         response = CWebResponseCreateWithHTMLBODY(&html);
         
         CWebObject *header = CWebObjectCreateDictionaryStringValueWithCopy("Host", "yuki-sato.com");
-        CWebHTTPRequest *req = CWebCreateRequestWith("219.94.243.70", "GET", 80, NULL);
+        CWebHTTPRequest *req = CWebRequestCreateWith("219.94.243.70", "GET", 80, NULL);
         req->headers = header;
         CWebHTTPResponse *res = CWebRequest(req);
         CWebRequestFree(req);

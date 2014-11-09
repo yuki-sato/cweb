@@ -36,13 +36,7 @@ CWebHTTPRequest *CWebCreateRequestWith(char *ip, char *method, int port, CWebObj
 CWebHTTPRequest *CWebRequestFromRequestString(char *requestString) {
     if(requestString == NULL)return NULL;
     
-    CWebHTTPRequest *request = malloc(sizeof(CWebHTTPRequest));
-    request->ip = NULL;
-    request->method = NULL;
-    request->path = NULL;
-    request->queries = NULL;
-    request->headers = NULL;
-    request->params = NULL;
+    CWebHTTPRequest *request = CWebCreateRequestWith(NULL, NULL, 0, NULL);
     
     unsigned long textLength = strlen(requestString);
     unsigned long head = 0 ;

@@ -12,7 +12,6 @@
 		9514FD4019813A27006376F7 /* cweb_object.c in Sources */ = {isa = PBXBuildFile; fileRef = 9514FD3819813A27006376F7 /* cweb_object.c */; };
 		9514FD4119813A27006376F7 /* cweb_render.c in Sources */ = {isa = PBXBuildFile; fileRef = 9514FD3A19813A27006376F7 /* cweb_render.c */; };
 		9514FD4219813A27006376F7 /* example.c in Sources */ = {isa = PBXBuildFile; fileRef = 9514FD3D19813A27006376F7 /* example.c */; };
-		9514FD4419816062006376F7 /* makefile in Sources */ = {isa = PBXBuildFile; fileRef = 9514FD4319816062006376F7 /* makefile */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,7 +37,6 @@
 		9514FD3B19813A27006376F7 /* cweb_render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cweb_render.h; sourceTree = SOURCE_ROOT; };
 		9514FD3C19813A27006376F7 /* cweb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cweb.h; sourceTree = SOURCE_ROOT; };
 		9514FD3D19813A27006376F7 /* example.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = example.c; sourceTree = SOURCE_ROOT; };
-		9514FD4319816062006376F7 /* makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = SOURCE_ROOT; };
 		952F29761967A40E002D18B0 /* cweb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cweb; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -82,7 +80,6 @@
 				9514FD3619813A27006376F7 /* cweb_main.c */,
 				9514FD3C19813A27006376F7 /* cweb.h */,
 				9514FD3D19813A27006376F7 /* example.c */,
-				9514FD4319816062006376F7 /* makefile */,
 			);
 			path = cweb;
 			sourceTree = "<group>";
@@ -140,7 +137,6 @@
 			files = (
 				9514FD4019813A27006376F7 /* cweb_object.c in Sources */,
 				9514FD3E19813A27006376F7 /* cweb_http.c in Sources */,
-				9514FD4419816062006376F7 /* makefile in Sources */,
 				9514FD4119813A27006376F7 /* cweb_render.c in Sources */,
 				9514FD3F19813A27006376F7 /* cweb_main.c in Sources */,
 				9514FD4219813A27006376F7 /* example.c in Sources */,

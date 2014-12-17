@@ -235,7 +235,7 @@ CWebObject * CWebObjectCreateDictionaryStringValueWithCopy(char *key, char *valu
     
     char *_key = malloc(sizeof(char) * (strlen(key) + 1));
     strcpy(_key, key);
-    char *_value = malloc(sizeof(char) * (strlen(key) + 1));
+    char *_value = malloc(sizeof(char) * (strlen(value) + 1));
     strcpy(_value, value);
     
     CWebObject *object = CWebObjectCreate();
@@ -251,7 +251,7 @@ int CWebObjectAddStringObjectWithCopyToDictionary(CWebObject *object, char *key,
     
     char *_key = malloc(sizeof(char) * (strlen(key) + 1));
     strcpy(_key, key);
-    char *_value = malloc(sizeof(char) * (strlen(key) + 1));
+    char *_value = malloc(sizeof(char) * (strlen(value) + 1));
     strcpy(_value, value);
     
     return CWebObjectAddObjectToDictionary(object, _key, _value, CWebObjectTypeString);

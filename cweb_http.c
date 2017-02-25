@@ -116,6 +116,10 @@ CWebHTTPResponse *CwebResponseFromResponseString(char *responseString, unsigned 
     // headerField
     // TODO
     
+    char *body = (char *)malloc((sizeof(char) * length + 1));
+    strcpy(body, responseString);
+    response->body = body;
+    
     return response;
 }
 

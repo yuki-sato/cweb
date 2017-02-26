@@ -19,8 +19,12 @@ unsigned long CWebRequestFillHeaders(CWebHTTPRequest *request, char *requestStri
 #pragma mark - Instant Methods -
 //===============================================
 CWebHTTPRequest *CWebRequestCreateWith(char *ip, char *method, int port, CWebObject *path) {
+
+	char *ip_retained = (char *)malloc(sizeof(char) * (strlen(ip) + 1));
+	strcpy(ip_retained, ip);
+
     CWebHTTPRequest *request = malloc(sizeof(CWebHTTPRequest));
-    request->ip = ip;
+    request->ip = ip_retained;
     request->port = port;
     request->method = method;
     request->path = path;

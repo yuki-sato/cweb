@@ -22,11 +22,13 @@ CWebHTTPRequest *CWebRequestCreateWith(char *ip, char *method, int port, CWebObj
 
 	char *ip_retained = (char *)malloc(sizeof(char) * (strlen(ip) + 1));
 	strcpy(ip_retained, ip);
+	char *method_retained = (char *)malloc(sizeof(char) * (strlen(method) + 1));
+	strcpy(method_retained, method);
 
     CWebHTTPRequest *request = malloc(sizeof(CWebHTTPRequest));
     request->ip = ip_retained;
     request->port = port;
-    request->method = method;
+    request->method = method_retained;
     request->path = path;
     request->headers = NULL;
     request->params = NULL;
